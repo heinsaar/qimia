@@ -1,8 +1,11 @@
 :root {
   color-scheme: light;
   --sidebar-width: 220px;
-  --cell-size: 54px;
   --cell-gap: 4px;
+  --topbar-height: 86px;
+  --legend-height-reserve: 152px;
+  --workspace-padding-total: 48px;
+  --table-target-height: calc(100vh - var(--topbar-height) - var(--workspace-padding-total) - var(--legend-height-reserve));
   --radius-tight: 8px;
   --font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --color-page: #f6f5f1;
@@ -56,7 +59,7 @@ button {
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 86px;
+  min-height: var(--topbar-height);
   padding: 18px 28px;
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -79,7 +82,7 @@ h1 {
 .main-layout {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-  min-height: calc(100vh - 86px);
+  min-height: calc(100vh - var(--topbar-height));
 }
 
 .sidebar {
@@ -204,36 +207,41 @@ h1 {
   display: grid;
   gap: 18px;
   align-content: start;
+  justify-items: center;
   padding: 24px;
   min-width: 0;
 }
 
 .table-scroll {
+  display: flex;
+  justify-content: center;
+  width: 100%;
   max-width: 100%;
-  overflow: auto;
-  padding-bottom: 8px;
+  overflow: visible;
 }
 
 .periodic-grid {
   display: grid;
-  grid-template-columns: repeat(18, var(--cell-size));
-  grid-template-rows: repeat(9, var(--cell-size));
-  gap: var(--cell-gap);
-  min-width: calc(var(--cell-size) * 18 + var(--cell-gap) * 17);
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  gap: clamp(2px, 0.24vw, var(--cell-gap));
+  width: min(100%, calc(var(--table-target-height) + var(--table-target-height)));
+  max-width: 100%;
+  aspect-ratio: 2 / 1;
   align-items: stretch;
 }
 
 .element-cell {
   position: relative;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 1px;
-  width: var(--cell-size);
-  height: var(--cell-size);
+  width: 100%;
+  height: 100%;
   min-width: 0;
-  padding: 5px;
+  padding: clamp(3px, 0.36vw, 7px);
   border: 1px solid var(--color-cell-border);
-  border-radius: 7px;
+  border-radius: clamp(5px, 0.48vw, 8px);
   background: var(--cell-bg, var(--color-cell-empty));
   color: #162023;
   cursor: pointer;
@@ -273,14 +281,14 @@ h1 {
 }
 
 .element-number {
-  font-size: 0.62rem;
+  font-size: clamp(0.54rem, 0.42rem + 0.24vw, 0.82rem);
   line-height: 1;
   color: rgba(22, 32, 35, 0.72);
 }
 
 .element-symbol {
   align-self: center;
-  font-size: 1.15rem;
+  font-size: clamp(0.96rem, 0.58rem + 0.78vw, 1.75rem);
   font-weight: 800;
   line-height: 1;
 }
@@ -290,7 +298,7 @@ h1 {
   min-width: 0;
   overflow: hidden;
   color: rgba(22, 32, 35, 0.78);
-  font-size: 0.55rem;
+  font-size: clamp(0.44rem, 0.34rem + 0.2vw, 0.68rem);
   line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -299,12 +307,12 @@ h1 {
 .series-marker {
   display: grid;
   place-items: center;
-  width: var(--cell-size);
-  height: var(--cell-size);
+  width: 100%;
+  height: 100%;
   border: 1px dashed var(--color-border);
-  border-radius: 7px;
+  border-radius: clamp(5px, 0.48vw, 8px);
   color: var(--color-muted);
-  font-size: 0.72rem;
+  font-size: clamp(0.52rem, 0.36rem + 0.28vw, 0.78rem);
   font-weight: 700;
 }
 
@@ -357,7 +365,8 @@ h1 {
 }
 
 .legend {
-  max-width: min(960px, 100%);
+  width: min(100%, calc(var(--table-target-height) + var(--table-target-height)));
+  max-width: 100%;
   padding: 16px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-tight);
@@ -507,8 +516,10 @@ h1 {
 @media (max-width: 900px) {
   :root {
     --sidebar-width: 100%;
-    --cell-size: 44px;
     --cell-gap: 3px;
+    --topbar-height: 132px;
+    --legend-height-reserve: 150px;
+    --workspace-padding-total: 32px;
   }
 
   .topbar {
@@ -537,15 +548,19 @@ h1 {
   }
 
   .element-cell {
-    padding: 4px;
+    padding: 2px;
   }
 
   .element-symbol {
-    font-size: 1rem;
+    font-size: clamp(0.52rem, 2.6vw, 1rem);
+  }
+
+  .element-number {
+    font-size: clamp(0.38rem, 1.55vw, 0.58rem);
   }
 
   .element-name {
-    font-size: 0.48rem;
+    font-size: clamp(0.32rem, 1.35vw, 0.48rem);
   }
 }
 
@@ -566,5 +581,8 @@ h1 {
     grid-template-columns: 1fr;
     gap: 4px;
   }
-}
 
+  .element-name {
+    display: none;
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "categorical-battery": {
+    "type": "categorical",
+    "entries": [
+      { "key": "anode", "colorVar": "--color-anode", "labelKey": "scale.anode" },
+      { "key": "cathode", "colorVar": "--color-cathode", "labelKey": "scale.cathode" },
+      { "key": "both", "colorVar": "--color-both", "labelKey": "scale.both" },
+      { "key": "electrolyte", "colorVar": "--color-electrolyte", "labelKey": "scale.electrolyte" },
+      { "key": "collector", "colorVar": "--color-collector", "labelKey": "scale.collector" }
+    ]
+  },
+  "log-abundance": {
+    "type": "continuous",
+    "scale": "log10",
+    "stops": [
+      { "value": -8, "color": "#2d2438" },
+      { "value": -4, "color": "#3a7c89" },
+      { "value": 0, "color": "#f2b84b" }
+    ]
+  },
+  "electronegativity": {
+    "type": "continuous",
+    "scale": "linear",
+    "stops": [
+      { "value": 0.7, "color": "#355c7d" },
+      { "value": 2.2, "color": "#6c9a8b" },
+      { "value": 4, "color": "#f67280" }
+    ]
+  },
+  "atomic-radius": {
+    "type": "continuous",
+    "scale": "linear",
+    "stops": [
+      { "value": 30, "color": "#4b6584" },
+      { "value": 150, "color": "#f7b731" },
+      { "value": 260, "color": "#eb3b5a" }
+    ]
+  },
+  "ionization-energy": {
+    "type": "continuous",
+    "scale": "linear",
+    "stops": [
+      { "value": 3.8, "color": "#3867d6" },
+      { "value": 10, "color": "#20bf6b" },
+      { "value": 24.6, "color": "#fa8231" }
+    ]
+  }
+}
+

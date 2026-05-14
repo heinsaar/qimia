@@ -15,6 +15,7 @@
   --color-muted: #687275;
   --color-border: rgba(29, 37, 40, 0.14);
   --color-cell-empty: #e5e2da;
+  --color-cell-zero: #a6a6a6;
   --color-cell-border: rgba(29, 37, 40, 0.16);
   --color-focus: #0f7b8a;
   --color-anode: #df574a;
@@ -156,7 +157,7 @@ h1 {
 }
 
 .layer-swatch-water_composition {
-  background: linear-gradient(135deg, #dceeff, #4da3d9, #0d5878);
+  background: linear-gradient(135deg, #a9cdec, #3f86c6, #0066ad);
 }
 
 .layer-swatch-electronegativity {
@@ -509,6 +510,7 @@ h1 {
     --color-muted: #aab5b7;
     --color-border: rgba(238, 242, 240, 0.16);
     --color-cell-empty: #30383b;
+    --color-cell-zero: #6d7174;
     --color-cell-border: rgba(238, 242, 240, 0.16);
   }
 

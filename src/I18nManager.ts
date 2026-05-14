@@ -21,6 +21,11 @@ export class I18nManager {
   }
 
   formatNumber(value: number): string {
+    const absoluteValue = Math.abs(value);
+    if (absoluteValue > 0 && (absoluteValue < 0.000001 || absoluteValue >= 100000)) {
+      return value.toExponential(2).replace(/\.?0+e/, 'e');
+    }
+
     return new Intl.NumberFormat(this.lang, {
       maximumFractionDigits: Math.abs(value) < 1 ? 8 : 3,
     }).format(value);
@@ -49,4 +54,3 @@ export class I18nManager {
     });
   }
 }
-

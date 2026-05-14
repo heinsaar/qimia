@@ -17,7 +17,11 @@ export class ColorScale {
       return 'var(--color-cell-empty)';
     }
 
-    const transformedValue = scale.scale === 'log10' ? Math.log10(Math.max(numberValue, 1e-12)) : numberValue;
+    if (numberValue === 0) {
+      return 'var(--color-cell-zero)';
+    }
+
+    const transformedValue = scale.scale === 'log10' ? Math.log10(numberValue) : numberValue;
     return this.interpolate(scale.stops, transformedValue);
   }
 
@@ -85,4 +89,3 @@ export class ColorScale {
     ];
   }
 }
-

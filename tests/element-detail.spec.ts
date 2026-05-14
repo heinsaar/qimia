@@ -12,6 +12,7 @@ test('clicking an element opens detail panel', async ({ page }) => {
 test('pressing Escape closes detail panel', async ({ page }) => {
   await openApp(page);
   await elementCell(page, 79).click();
+  await expect(page.locator('[data-testid="element-detail"]')).toBeVisible();
   await page.keyboard.press('Escape');
 
   await expect(page.locator('[data-testid="element-detail"]')).not.toBeVisible();

@@ -23,14 +23,18 @@ test('switching layers updates the legend', async ({ page }) => {
   await expect(page.locator('[data-testid="legend-title"]')).toContainText('Crustal');
 });
 
-test('water composition layer colors hydrogen and oxygen', async ({ page }) => {
+test('water abundance layer uses ocean water concentrations', async ({ page }) => {
   await openApp(page);
   await page.click('[data-layer-id="water_composition"]');
 
   await expect(page.locator('[data-testid="legend-title"]')).toContainText('Water');
   await expect(elementCell(page, 1)).toHaveAttribute('data-has-layer-value', 'true');
   await expect(elementCell(page, 8)).toHaveAttribute('data-has-layer-value', 'true');
-  await expect(elementCell(page, 17)).toHaveAttribute('data-has-layer-value', 'false');
+  await expect(elementCell(page, 17)).toHaveAttribute('data-has-layer-value', 'true');
+  await expect(elementCell(page, 87)).toHaveAttribute('data-has-layer-value', 'true');
+
+  const franciumBg = await cssVariable(elementCell(page, 87), '--cell-bg');
+  expect(franciumBg).toBe('#a6a6a6');
 });
 
 test('periodic table scales to the available desktop workspace', async ({ page }) => {

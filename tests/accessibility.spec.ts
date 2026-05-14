@@ -4,12 +4,15 @@ import { openApp } from './fixtures/test-helpers';
 test('all element cells have aria-label', async ({ page }) => {
   await openApp(page);
   const cells = page.locator('[data-atomic]');
-  const count = await cells.count();
+  await expect(cells).toHaveCount(118);
 
-  expect(count).toBe(118);
-  for (let index = 0; index < count; index += 1) {
-    await expect(cells.nth(index)).toHaveAttribute('aria-label', /.+/);
-  }
+  const missingLabels = await cells.evaluateAll((elements) =>
+    elements
+      .filter((element) => !element.getAttribute('aria-label'))
+      .map((element) => element.getAttribute('data-atomic')),
+  );
+
+  expect(missingLabels).toEqual([]);
 });
 
 test('sidebar layer items are keyboard-navigable', async ({ page }) => {
@@ -19,4 +22,3 @@ test('sidebar layer items are keyboard-navigable', async ({ page }) => {
 
   await expect(page.locator('[data-testid="layer-item"]:first-child')).toHaveAttribute('aria-selected', 'true');
 });
-

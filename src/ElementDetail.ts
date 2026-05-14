@@ -1,4 +1,4 @@
-import type { ColorScale as ColorScaleDef, Element, Layer } from './types';
+import type { ColorScale as ColorScaleDef, Element, ElementStoryMap, Layer } from './types';
 import type { I18nManager } from './I18nManager';
 
 interface DetailState {
@@ -14,6 +14,7 @@ export class ElementDetail {
     private readonly container: HTMLElement,
     private readonly i18n: I18nManager,
     private readonly onClose: () => void,
+    private readonly stories: ElementStoryMap,
   ) {
     this.close();
   }
@@ -45,6 +46,7 @@ export class ElementDetail {
     const { element, layer, scale } = this.current;
     const layerValue = layer.values[String(element.atomicNumber)];
     const name = this.i18n.t(element.nameKey);
+    const story = this.storyFor(element);
     const rows = this.detailRows(element, layer, scale, layerValue)
       .map(
         (row) => `
@@ -66,12 +68,21 @@ export class ElementDetail {
           <h2 data-testid="detail-name">${name}</h2>
           <strong data-testid="detail-symbol">${element.symbol}</strong>
         </div>
+        <section class="detail-story">
+          <h3>${this.i18n.t('detail.story')}</h3>
+          <p data-testid="detail-story">${story}</p>
+        </section>
         <dl class="detail-list">${rows}</dl>
       </aside>
     `;
 
     this.container.querySelector<HTMLButtonElement>('.detail-close')?.addEventListener('click', this.onClose);
     this.i18n.applyToDOM(this.container);
+  }
+
+  private storyFor(element: Element): string {
+    const story = this.stories[String(element.atomicNumber)];
+    return story?.[this.i18n.language] ?? story?.en ?? this.i18n.t('detail.unavailable');
   }
 
   private detailRows(
@@ -134,4 +145,3 @@ export class ElementDetail {
     return String(value);
   }
 }
-

@@ -1,7 +1,11 @@
 import { expect, test } from '@playwright/test';
+import elementStories from '../data/elementStories.json';
+import elements from '../data/elements.json';
 import { ColorScale } from '../src/ColorScale';
 import { LayerRegistry } from '../src/LayerRegistry';
-import type { ColorScale as ColorScaleDef, Layer } from '../src/types';
+import type { ColorScale as ColorScaleDef, ElementStoryMap, Layer } from '../src/types';
+
+const stories = elementStories as ElementStoryMap;
 
 test('LayerRegistry returns registered layers in insertion order', () => {
   const registry = new LayerRegistry();
@@ -45,3 +49,18 @@ test('ColorScale interpolates continuous values', () => {
   expect(resolver.resolve(scale, 5)).toBe('rgb(128, 128, 128)');
 });
 
+test('all elements have localized detail stories', () => {
+  for (const element of elements) {
+    const story = stories[String(element.atomicNumber)];
+    expect(story, `${element.symbol} story`).toBeDefined();
+    if (!story?.en || !story.ru || !story.hy) {
+      throw new Error(`${element.symbol} is missing a localized detail story`);
+    }
+
+    const englishWordCount = story.en.trim().split(/\s+/).length;
+    expect(englishWordCount, `${element.symbol} English story length`).toBeGreaterThanOrEqual(85);
+    expect(englishWordCount, `${element.symbol} English story length`).toBeLessThanOrEqual(140);
+    expect(story.ru).not.toMatch(/Known since antiquity|Ancient Egypt|Ancient china/);
+    expect(story.hy).not.toMatch(/Known since antiquity|Ancient Egypt|Ancient china/);
+  }
+});

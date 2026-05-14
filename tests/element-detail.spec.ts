@@ -7,6 +7,23 @@ test('clicking an element opens detail panel', async ({ page }) => {
 
   await expect(page.locator('[data-testid="element-detail"]')).toBeVisible();
   await expect(page.locator('[data-testid="detail-symbol"]')).toContainText('Au');
+  await expect(page.locator('[data-testid="detail-story"]')).toContainText('Gold (Au) is element 79');
+});
+
+test('detail story switches language with the app', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-lang="ru"]');
+  await elementCell(page, 79).click();
+
+  await expect(page.locator('[data-testid="detail-story"]')).toContainText('Золото (Au)');
+});
+
+test('detail story supports Armenian', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-lang="hy"]');
+  await elementCell(page, 79).click();
+
+  await expect(page.locator('[data-testid="detail-story"]')).toContainText('Ոսկի (Au)');
 });
 
 test('pressing Escape closes detail panel', async ({ page }) => {

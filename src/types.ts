@@ -72,3 +72,6 @@ export type TranslationCatalog = Record<string, string>;
 
 export type ColorScaleMap = Record<string, ColorScale>;
 
+export type ElementStory = Partial<Record<Language, string>>;
+
+export type ElementStoryMap = Record<string, ElementStory>;

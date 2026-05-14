@@ -7,9 +7,10 @@ import { TableRenderer } from './TableRenderer';
 import { LangPicker } from './components/LangPicker';
 import { LayerMenu } from './components/LayerMenu';
 import { Legend } from './components/Legend';
-import type { AppState, ColorScaleMap, Element, Language, Layer, TranslationCatalog } from './types';
+import type { AppState, ColorScaleMap, Element, ElementStoryMap, Language, Layer, TranslationCatalog } from './types';
 import colorScaleData from '../data/colorScales.json';
 import elementsData from '../data/elements.json';
+import elementStoriesData from '../data/elementStories.json';
 import atomicRadiusLayer from '../data/layers/atomic_radius.json';
 import batteryLayer from '../data/layers/battery.json';
 import crustalLayer from '../data/layers/crustal_abundance.json';
@@ -32,6 +33,7 @@ const layers = [
 layers.forEach((layer) => registry.register(layer));
 
 const elements = elementsData as Element[];
+const elementStories = elementStoriesData as ElementStoryMap;
 const colorScales = colorScaleData as ColorScaleMap;
 const i18n = new I18nManager({
   en: en as TranslationCatalog,
@@ -87,7 +89,7 @@ async function boot(): Promise<void> {
   const tableRenderer = new TableRenderer(tableRoot, elements, i18n, colorScale);
   const legend = new Legend(legendRoot, i18n);
   const langPicker = new LangPicker(langPickerRoot, i18n, selectLanguage);
-  const detail = new ElementDetail(detailRoot, i18n, closeDetail);
+  const detail = new ElementDetail(detailRoot, i18n, closeDetail, elementStories);
 
   tableRenderer.render((element) => {
     state.selectedElement = element.atomicNumber;

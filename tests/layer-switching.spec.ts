@@ -3,7 +3,7 @@ import { cssVariable, elementCell, openApp } from './fixtures/test-helpers';
 
 test('sidebar lists all registered layers', async ({ page }) => {
   await openApp(page);
-  await expect(page.locator('[data-testid="layer-item"]')).toHaveCount(5);
+  await expect(page.locator('[data-testid="layer-item"]')).toHaveCount(6);
 });
 
 test('switching to battery layer colors lithium cell', async ({ page }) => {
@@ -21,6 +21,16 @@ test('switching layers updates the legend', async ({ page }) => {
 
   await expect(page.locator('[data-testid="legend"]')).toBeVisible();
   await expect(page.locator('[data-testid="legend-title"]')).toContainText('Crustal');
+});
+
+test('water composition layer colors hydrogen and oxygen', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-layer-id="water_composition"]');
+
+  await expect(page.locator('[data-testid="legend-title"]')).toContainText('Water');
+  await expect(elementCell(page, 1)).toHaveAttribute('data-has-layer-value', 'true');
+  await expect(elementCell(page, 8)).toHaveAttribute('data-has-layer-value', 'true');
+  await expect(elementCell(page, 17)).toHaveAttribute('data-has-layer-value', 'false');
 });
 
 test('periodic table scales to the available desktop workspace', async ({ page }) => {

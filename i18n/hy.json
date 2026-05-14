@@ -17,6 +17,8 @@
   "layer.battery.description": "Առևտրային մարտկոցային տեխնոլոգիաներում օգտագործվող տարրեր",
   "layer.crustal.title": "Երկրակեղևի առատություն",
   "layer.crustal.description": "Երկրակեղևում տարրերի զանգվածային բաժնի գնահատական",
+  "layer.water.title": "Ջրի կազմ",
+  "layer.water.description": "Ջուրը՝ H₂O, կազմող տարրերի զանգվածային բաժինը",
   "layer.electronegativity.title": "Էլեկտրաբացասականություն",
   "layer.electronegativity.description": "Պոլինգի սանդղակով հայտնի տարրերի արժեքներ",
   "layer.radius.title": "Ատոմային շառավիղ",
@@ -176,4 +178,3 @@
   "element.Ts": "Թեննեսին",
   "element.Og": "Օգանեսոն"
 }
-

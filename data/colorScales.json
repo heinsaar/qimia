@@ -18,6 +18,15 @@
       { "value": 0, "color": "#f2b84b" }
     ]
   },
+  "water-composition": {
+    "type": "continuous",
+    "scale": "linear",
+    "stops": [
+      { "value": 0, "color": "#dceeff" },
+      { "value": 12, "color": "#4da3d9" },
+      { "value": 90, "color": "#0d5878" }
+    ]
+  },
   "electronegativity": {
     "type": "continuous",
     "scale": "linear",
@@ -46,4 +55,3 @@
     ]
   }
 }
-

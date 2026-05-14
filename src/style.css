@@ -155,6 +155,10 @@ h1 {
   background: linear-gradient(135deg, #2d2438, #3a7c89, #f2b84b);
 }
 
+.layer-swatch-water_composition {
+  background: linear-gradient(135deg, #dceeff, #4da3d9, #0d5878);
+}
+
 .layer-swatch-electronegativity {
   background: linear-gradient(135deg, #355c7d, #6c9a8b, #f67280);
 }

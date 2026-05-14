@@ -17,6 +17,8 @@
   "layer.battery.description": "Elements used in commercial battery technologies",
   "layer.crustal.title": "Crustal Abundance",
   "layer.crustal.description": "Estimated abundance of elements in Earth's crust by mass",
+  "layer.water.title": "Water Composition",
+  "layer.water.description": "Mass share of the elements that make up water, H₂O",
   "layer.electronegativity.title": "Electronegativity",
   "layer.electronegativity.description": "Pauling electronegativity values for known elements",
   "layer.radius.title": "Atomic Radius",
@@ -176,4 +178,3 @@
   "element.Ts": "Tennessine",
   "element.Og": "Oganesson"
 }
-

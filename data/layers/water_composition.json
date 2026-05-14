@@ -1,0 +1,12 @@
+{
+  "id": "water_composition",
+  "titleKey": "layer.water.title",
+  "descriptionKey": "layer.water.description",
+  "colorScale": "water-composition",
+  "type": "continuous",
+  "unit": "%",
+  "values": {
+    "1": 11.19,
+    "8": 88.81
+  }
+}

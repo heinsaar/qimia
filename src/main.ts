@@ -15,12 +15,20 @@ import batteryLayer from '../data/layers/battery.json';
 import crustalLayer from '../data/layers/crustal_abundance.json';
 import electronegativityLayer from '../data/layers/electronegativity.json';
 import ionizationLayer from '../data/layers/ionization_energy.json';
+import waterCompositionLayer from '../data/layers/water_composition.json';
 import en from '../i18n/en.json';
 import hy from '../i18n/hy.json';
 import ru from '../i18n/ru.json';
 
 const registry = new LayerRegistry();
-const layers = [batteryLayer, crustalLayer, electronegativityLayer, atomicRadiusLayer, ionizationLayer] as Layer[];
+const layers = [
+  batteryLayer,
+  crustalLayer,
+  waterCompositionLayer,
+  electronegativityLayer,
+  atomicRadiusLayer,
+  ionizationLayer,
+] as Layer[];
 layers.forEach((layer) => registry.register(layer));
 
 const elements = elementsData as Element[];

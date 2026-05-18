@@ -13,6 +13,7 @@ test('switching to battery layer colors lithium cell', async ({ page }) => {
   const bg = await cssVariable(elementCell(page, 3), '--cell-bg');
   expect(bg).not.toBe('');
   expect(bg).not.toBe('var(--color-cell-empty)');
+  await expect(elementCell(page, 3).locator('.element-layer-value')).toHaveText('Anode material');
 });
 
 test('switching layers updates the legend', async ({ page }) => {
@@ -21,6 +22,33 @@ test('switching layers updates the legend', async ({ page }) => {
 
   await expect(page.locator('[data-testid="legend"]')).toBeVisible();
   await expect(page.locator('[data-testid="legend-title"]')).toContainText('Crustal');
+});
+
+test('crustal abundance layer renders reported values on element cells', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-layer-id="crustal_abundance"]');
+
+  await expect(page.locator('[data-atomic] .element-layer-value')).toHaveCount(118);
+  await expect(elementCell(page, 1).locator('.element-layer-value')).toHaveText('0.140%');
+  await expect(elementCell(page, 21).locator('.element-layer-value')).toHaveText('0.000022%');
+  await expect(elementCell(page, 43).locator('.element-layer-value')).toHaveText('0%');
+  await expect(elementCell(page, 75).locator('.element-layer-value')).toHaveText('7.0e-10%');
+});
+
+test('numeric layers render their own values on element cells', async ({ page }) => {
+  await openApp(page);
+
+  await page.click('[data-layer-id="electronegativity"]');
+  await expect(elementCell(page, 8).locator('.element-layer-value')).toHaveText('3.44 Pauling');
+
+  await page.click('[data-layer-id="atomic_radius"]');
+  await expect(elementCell(page, 8).locator('.element-layer-value')).toHaveText('48 pm');
+
+  await page.click('[data-layer-id="ionization_energy"]');
+  await expect(elementCell(page, 8).locator('.element-layer-value')).toHaveText('13.62 eV');
+
+  await page.click('[data-layer-id="water_composition"]');
+  await expect(elementCell(page, 8).locator('.element-layer-value')).toHaveText('8.57e+5 mg/L');
 });
 
 test('water abundance layer uses ocean water concentrations', async ({ page }) => {

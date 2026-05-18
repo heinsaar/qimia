@@ -6,6 +6,8 @@ type SelectElementHandler = (element: Element) => void;
 
 export class TableRenderer {
   private readonly cells = new Map<number, HTMLButtonElement>();
+  private activeLayer: Layer | null = null;
+  private activeScale: ColorScaleDef | undefined;
   private grid: HTMLDivElement | null = null;
 
   constructor(
@@ -45,11 +47,14 @@ export class TableRenderer {
   }
 
   updateLayer(layer: Layer, scale: ColorScaleDef | undefined): void {
+    this.activeLayer = layer;
+    this.activeScale = scale;
     this.cells.forEach((cell, atomicNumber) => {
       const layerValue = layer.values[String(atomicNumber)];
       cell.style.setProperty('--cell-bg', this.colorScale.resolve(scale, layerValue));
       cell.dataset.hasLayerValue = layerValue === undefined ? 'false' : 'true';
     });
+    this.updateLabels();
   }
 
   updateLabels(): void {
@@ -62,12 +67,19 @@ export class TableRenderer {
       }
 
       const name = this.i18n.t(element.nameKey);
-      cell.setAttribute('aria-label', `${name}, ${element.symbol}, ${element.atomicNumber}`);
+      const layerValueLabel = this.layerValueLabel(element);
+      const ariaParts = [name, element.symbol, String(element.atomicNumber)];
+      if (layerValueLabel) {
+        ariaParts.push(layerValueLabel);
+      }
+
+      cell.setAttribute('aria-label', ariaParts.join(', '));
       cell.dataset.tooltip = `${name} (${element.symbol})`;
       cell.innerHTML = `
         <span class="element-number">${element.atomicNumber}</span>
         <span class="element-symbol">${element.symbol}</span>
         <span class="element-name">${name}</span>
+        ${layerValueLabel ? `<span class="element-layer-value">${layerValueLabel}</span>` : ''}
       `;
     });
   }
@@ -101,5 +113,42 @@ export class TableRenderer {
 
     return element.group;
   }
-}
 
+  private layerValueLabel(element: Element): string {
+    if (!this.activeLayer) {
+      return '';
+    }
+
+    const atomicKey = String(element.atomicNumber);
+    const displayValue = this.activeLayer.displayValues?.[atomicKey];
+    if (displayValue) {
+      return displayValue;
+    }
+
+    const layerValue = this.activeLayer.values[atomicKey];
+    if (this.activeLayer.type === 'continuous' && typeof layerValue === 'number') {
+      return `${this.i18n.formatNumber(layerValue)} ${this.activeLayer.unit ?? ''}`.trim();
+    }
+
+    if (this.activeLayer.type === 'categorical') {
+      const category = this.extractCategory(layerValue);
+      const labelKey = this.activeScale?.entries?.find((entry) => entry.key === category)?.labelKey;
+      return labelKey ? this.i18n.t(labelKey) : category;
+    }
+
+    return '';
+  }
+
+  private extractCategory(value: unknown): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (typeof value === 'object' && value !== null && 'category' in value) {
+      const category = (value as { category?: unknown }).category;
+      return typeof category === 'string' ? category : '';
+    }
+
+    return '';
+  }
+}

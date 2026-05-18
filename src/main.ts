@@ -5,6 +5,7 @@ import { I18nManager } from './I18nManager';
 import { LayerRegistry } from './LayerRegistry';
 import { TableRenderer } from './TableRenderer';
 import { LangPicker } from './components/LangPicker';
+import { LayerContext } from './components/LayerContext';
 import { LayerMenu } from './components/LayerMenu';
 import { Legend } from './components/Legend';
 import type { AppState, ColorScaleMap, Element, ElementStoryMap, Language, Layer, TranslationCatalog } from './types';
@@ -15,6 +16,7 @@ import atomicRadiusLayer from '../data/layers/atomic_radius.json';
 import batteryLayer from '../data/layers/battery.json';
 import crustalLayer from '../data/layers/crustal_abundance.json';
 import electronegativityLayer from '../data/layers/electronegativity.json';
+import humanBodyLayer from '../data/layers/human_body.json';
 import ionizationLayer from '../data/layers/ionization_energy.json';
 import waterCompositionLayer from '../data/layers/water_composition.json';
 import en from '../i18n/en.json';
@@ -26,6 +28,7 @@ const layers = [
   batteryLayer,
   crustalLayer,
   waterCompositionLayer,
+  humanBodyLayer,
   electronegativityLayer,
   atomicRadiusLayer,
   ionizationLayer,
@@ -82,12 +85,19 @@ async function boot(): Promise<void> {
   const tableRoot = requiredElement<HTMLElement>('#periodic-table');
   const legendRoot = requiredElement<HTMLElement>('#legend-root');
   const langPickerRoot = requiredElement<HTMLElement>('#lang-picker');
+  const insetRoot = document.createElement('div');
+  insetRoot.id = 'table-inset';
+  insetRoot.className = 'table-inset';
+  const layerContextRoot = document.createElement('div');
+  layerContextRoot.id = 'layer-context-root';
   const detailRoot = document.createElement('div');
   detailRoot.id = 'detail-root';
+  insetRoot.append(layerContextRoot, detailRoot);
 
   const layerMenu = new LayerMenu(layerMenuRoot, registry.getAll(), i18n, selectLayer);
   const tableRenderer = new TableRenderer(tableRoot, elements, i18n, colorScale);
   const legend = new Legend(legendRoot, i18n);
+  const layerContext = new LayerContext(layerContextRoot, i18n);
   const langPicker = new LangPicker(langPickerRoot, i18n, selectLanguage);
   const detail = new ElementDetail(detailRoot, i18n, elementStories);
 
@@ -96,7 +106,7 @@ async function boot(): Promise<void> {
     tableRenderer.setSelected(element.atomicNumber);
     detail.show(element, activeLayer(), activeScale());
   });
-  tableRenderer.mountDetail(detailRoot);
+  tableRenderer.mountDetail(insetRoot);
 
   renderState();
 
@@ -123,6 +133,7 @@ async function boot(): Promise<void> {
     layerMenu.render(state.activeLayerId);
     langPicker.render(state.language);
     legend.render(layer, scale);
+    layerContext.render(layer);
     tableRenderer.updateLayer(layer, scale);
     tableRenderer.setSelected(state.selectedElement);
 

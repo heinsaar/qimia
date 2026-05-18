@@ -42,6 +42,7 @@ export interface Layer {
   source?: string;
   notes?: string[];
   legendBins?: LayerLegendBin[];
+  inset?: LayerInset;
   displayValues?: Record<string, string>;
   values: Record<string, unknown>;
 }
@@ -50,6 +51,19 @@ export interface LayerLegendBin {
   label: string;
   min?: number;
   max?: number;
+}
+
+export interface LayerInset {
+  variant?: 'generic' | 'human-body';
+  titleKey?: string;
+  visual?: 'human';
+  key?: LayerInsetKey[];
+  details?: string[];
+}
+
+export interface LayerInsetKey {
+  labelKey: string;
+  colorVar: string;
 }
 
 export interface ColorScale {

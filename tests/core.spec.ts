@@ -2,6 +2,7 @@ import { expect, test } from '@playwright/test';
 import elementStories from '../data/elementStories.json';
 import elements from '../data/elements.json';
 import crustalLayer from '../data/layers/crustal_abundance.json';
+import humanBodyLayer from '../data/layers/human_body.json';
 import { ColorScale } from '../src/ColorScale';
 import { LayerRegistry } from '../src/LayerRegistry';
 import type { ColorScale as ColorScaleDef, ElementStoryMap, Layer } from '../src/types';
@@ -97,6 +98,31 @@ test('crustal abundance layer includes every pictured element value', () => {
   expect(displayValues['41']).toBe('0.000020%');
   expect(displayValues['75']).toBe('7.0e-10%');
   expect(displayValues['90']).toBe('0.000010%');
+});
+
+test('human body layer includes every pictured element value', () => {
+  const layer = humanBodyLayer as Layer;
+  const values = layer.values as Record<string, { category: string; percent?: number; trace?: boolean }>;
+  const displayValues = layer.displayValues ?? {};
+  const expectedKeys = elements.map((element) => String(element.atomicNumber));
+
+  expect(Object.keys(values).sort((left, right) => Number(left) - Number(right))).toEqual(expectedKeys);
+  expect(Object.keys(displayValues).sort((left, right) => Number(left) - Number(right))).toEqual(expectedKeys);
+  expect(layer.inset?.variant).toBe('human-body');
+  expect(layer.inset?.visual).toBe('human');
+  expect(layer.notes).toContain('layer.human.note.average');
+  expect(displayValues['1']).toBe('10%');
+  expect(displayValues['6']).toBe('22.3%');
+  expect(displayValues['8']).toBe('61.4%');
+  expect(displayValues['15']).toBe('1.11%');
+  expect(displayValues['20']).toBe('1.43%');
+  expect(displayValues['21']).toBe('TRACE');
+  expect(displayValues['82']).toBe('0.00017%');
+  expect(displayValues['118']).toBe('0%');
+  expect(values['8'].category).toBe('essential');
+  expect(values['42'].category).toBe('essential');
+  expect(values['21'].trace).toBe(true);
+  expect(values['2'].category).toBe('zero');
 });
 
 test('all elements have localized detail stories', () => {

@@ -3,7 +3,7 @@ import { cssVariable, elementCell, openApp } from './fixtures/test-helpers';
 
 test('sidebar lists all registered layers', async ({ page }) => {
   await openApp(page);
-  await expect(page.locator('[data-testid="layer-item"]')).toHaveCount(6);
+  await expect(page.locator('[data-testid="layer-item"]')).toHaveCount(7);
 });
 
 test('switching to battery layer colors lithium cell', async ({ page }) => {
@@ -65,6 +65,29 @@ test('water abundance layer uses ocean water concentrations', async ({ page }) =
   expect(franciumBg).toBe('#a6a6a6');
 });
 
+test('human body layer renders pictured percentages and context', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-layer-id="human_body"]');
+
+  await expect(page.locator('[data-testid="legend-title"]')).toContainText('Human Body');
+  await expect(page.locator('[data-testid="layer-context"]')).toContainText('Essential elements');
+  await expect(page.locator('[data-testid="layer-context"]')).toContainText('Trace = <0.00001%');
+  await expect(elementCell(page, 1).locator('.element-layer-value')).toHaveText('10%');
+  await expect(elementCell(page, 8).locator('.element-layer-value')).toHaveText('61.4%');
+  await expect(elementCell(page, 21).locator('.element-layer-value')).toHaveText('TRACE');
+  await expect(elementCell(page, 82).locator('.element-layer-value')).toHaveText('0.00017%');
+  await expect(elementCell(page, 118).locator('.element-layer-value')).toHaveText('0%');
+});
+
+test('generic layer context uses layer metadata in the table inset', async ({ page }) => {
+  await openApp(page);
+  await page.click('[data-layer-id="crustal_abundance"]');
+
+  await expect(page.locator('[data-testid="layer-context-title"]')).toContainText('Crustal Abundance');
+  await expect(page.locator('[data-testid="layer-context"]')).toContainText('Noble gases form no part');
+  await expect(page.locator('[data-testid="layer-context"]')).toContainText('10-100%');
+});
+
 test('periodic table scales to the available desktop workspace', async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 900 });
   await openApp(page);
@@ -94,6 +117,7 @@ test('periodic table keeps the same footprint across layers', async ({ page }) =
     'battery',
     'crustal_abundance',
     'water_composition',
+    'human_body',
     'electronegativity',
     'atomic_radius',
     'ionization_energy',

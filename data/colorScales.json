@@ -29,6 +29,14 @@
       { "value": 6, "color": "#0066ad" }
     ]
   },
+  "human-body": {
+    "type": "categorical",
+    "entries": [
+      { "key": "essential", "colorVar": "--color-human-essential", "labelKey": "scale.essential" },
+      { "key": "nonessential", "colorVar": "--color-human-nonessential", "labelKey": "scale.nonessential" },
+      { "key": "zero", "colorVar": "--color-human-zero", "labelKey": "scale.zero" }
+    ]
+  },
   "electronegativity": {
     "type": "continuous",
     "scale": "linear",

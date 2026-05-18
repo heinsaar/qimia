@@ -46,6 +46,11 @@ export class TableRenderer {
     this.updateLabels();
   }
 
+  mountDetail(container: HTMLElement): void {
+    container.classList.add('detail-grid-slot');
+    this.grid?.append(container);
+  }
+
   updateLayer(layer: Layer, scale: ColorScaleDef | undefined): void {
     this.activeLayer = layer;
     this.activeScale = scale;

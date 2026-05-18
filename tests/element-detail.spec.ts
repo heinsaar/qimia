@@ -1,7 +1,25 @@
 import { expect, test } from '@playwright/test';
 import { elementCell, openApp } from './fixtures/test-helpers';
 
-test('clicking an element opens detail panel', async ({ page }) => {
+test('detail panel shows hydrogen by default inside the table gap', async ({ page }) => {
+  await openApp(page);
+
+  const detail = page.locator('[data-testid="element-detail"]');
+  const grid = page.locator('.periodic-grid');
+  const detailBox = await detail.boundingBox();
+  const gridBox = await grid.boundingBox();
+
+  expect(detailBox).not.toBeNull();
+  expect(gridBox).not.toBeNull();
+  await expect(detail).toBeVisible();
+  await expect(page.locator('[data-testid="detail-symbol"]')).toContainText('H');
+  await expect(elementCell(page, 1)).toHaveAttribute('aria-pressed', 'true');
+  expect(detailBox!.x).toBeGreaterThan(gridBox!.x);
+  expect(detailBox!.y).toBeGreaterThanOrEqual(gridBox!.y);
+  expect(detailBox!.x + detailBox!.width).toBeLessThan(gridBox!.x + gridBox!.width);
+});
+
+test('clicking an element updates detail panel', async ({ page }) => {
   await openApp(page);
   await elementCell(page, 79).click();
 
@@ -34,19 +52,21 @@ test('detail panel uses reported crustal abundance labels', async ({ page }) => 
   await expect(page.locator('[data-testid="element-detail"]')).toContainText('0.000010%');
 });
 
-test('pressing Escape closes detail panel', async ({ page }) => {
+test('pressing Escape leaves the current inline detail visible', async ({ page }) => {
   await openApp(page);
   await elementCell(page, 79).click();
   await expect(page.locator('[data-testid="element-detail"]')).toBeVisible();
   await page.keyboard.press('Escape');
 
-  await expect(page.locator('[data-testid="element-detail"]')).not.toBeVisible();
+  await expect(page.locator('[data-testid="element-detail"]')).toBeVisible();
+  await expect(page.locator('[data-testid="detail-symbol"]')).toContainText('Au');
 });
 
-test('clicking outside closes detail panel', async ({ page }) => {
+test('clicking outside leaves the current inline detail visible', async ({ page }) => {
   await openApp(page);
   await elementCell(page, 79).click();
   await page.locator('[data-testid="legend"]').click();
 
-  await expect(page.locator('[data-testid="element-detail"]')).not.toBeVisible();
+  await expect(page.locator('[data-testid="element-detail"]')).toBeVisible();
+  await expect(page.locator('[data-testid="detail-symbol"]')).toContainText('Au');
 });

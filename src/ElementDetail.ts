@@ -13,22 +13,12 @@ export class ElementDetail {
   constructor(
     private readonly container: HTMLElement,
     private readonly i18n: I18nManager,
-    private readonly onClose: () => void,
     private readonly stories: ElementStoryMap,
-  ) {
-    this.close();
-  }
+  ) {}
 
   show(element: Element, layer: Layer, scale?: ColorScaleDef): void {
     this.current = { element, layer, scale };
     this.render();
-  }
-
-  close(): void {
-    this.current = null;
-    this.container.innerHTML = `
-      <aside class="detail-panel" data-testid="element-detail" hidden></aside>
-    `;
   }
 
   rerender(): void {
@@ -39,7 +29,6 @@ export class ElementDetail {
 
   private render(): void {
     if (!this.current) {
-      this.close();
       return;
     }
 
@@ -60,9 +49,6 @@ export class ElementDetail {
 
     this.container.innerHTML = `
       <aside class="detail-panel is-open" data-testid="element-detail" aria-label="${this.i18n.t('app.elementDetail')}">
-        <button class="detail-close" type="button" data-i18n-aria="app.closeDetail" aria-label="${this.i18n.t(
-          'app.closeDetail',
-        )}">×</button>
         <div class="detail-heading">
           <span class="detail-number">${element.atomicNumber}</span>
           <h2 data-testid="detail-name">${name}</h2>
@@ -76,7 +62,6 @@ export class ElementDetail {
       </aside>
     `;
 
-    this.container.querySelector<HTMLButtonElement>('.detail-close')?.addEventListener('click', this.onClose);
     this.i18n.applyToDOM(this.container);
   }
 

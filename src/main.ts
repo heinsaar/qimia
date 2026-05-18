@@ -45,7 +45,7 @@ const colorScale = new ColorScale();
 const state: AppState = {
   activeLayerId: readLayerId(),
   language: readLanguage(),
-  selectedElement: null,
+  selectedElement: 1,
 };
 
 const root = requiredElement<HTMLDivElement>('#app');
@@ -74,7 +74,6 @@ async function boot(): Promise<void> {
           <div id="legend-root"></div>
         </main>
       </div>
-      <div id="detail-root"></div>
     </div>
   `;
   i18n.applyToDOM(root);
@@ -83,37 +82,23 @@ async function boot(): Promise<void> {
   const tableRoot = requiredElement<HTMLElement>('#periodic-table');
   const legendRoot = requiredElement<HTMLElement>('#legend-root');
   const langPickerRoot = requiredElement<HTMLElement>('#lang-picker');
-  const detailRoot = requiredElement<HTMLElement>('#detail-root');
+  const detailRoot = document.createElement('div');
+  detailRoot.id = 'detail-root';
 
   const layerMenu = new LayerMenu(layerMenuRoot, registry.getAll(), i18n, selectLayer);
   const tableRenderer = new TableRenderer(tableRoot, elements, i18n, colorScale);
   const legend = new Legend(legendRoot, i18n);
   const langPicker = new LangPicker(langPickerRoot, i18n, selectLanguage);
-  const detail = new ElementDetail(detailRoot, i18n, closeDetail, elementStories);
+  const detail = new ElementDetail(detailRoot, i18n, elementStories);
 
   tableRenderer.render((element) => {
     state.selectedElement = element.atomicNumber;
     tableRenderer.setSelected(element.atomicNumber);
     detail.show(element, activeLayer(), activeScale());
   });
+  tableRenderer.mountDetail(detailRoot);
 
   renderState();
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeDetail();
-    }
-  });
-
-  document.addEventListener('pointerdown', (event) => {
-    if (state.selectedElement === null || !(event.target instanceof HTMLElement)) {
-      return;
-    }
-
-    if (!event.target.closest('.detail-panel') && !event.target.closest('.element-cell')) {
-      closeDetail();
-    }
-  });
 
   function selectLayer(layerId: string): void {
     state.activeLayerId = layerId;
@@ -145,12 +130,6 @@ async function boot(): Promise<void> {
     if (selectedElement) {
       detail.show(selectedElement, layer, scale);
     }
-  }
-
-  function closeDetail(): void {
-    state.selectedElement = null;
-    tableRenderer.setSelected(null);
-    detail.close();
   }
 }
 

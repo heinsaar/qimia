@@ -106,7 +106,7 @@ export class ElementDetail {
       ['detail.density', element.density ? `${element.density} g/cm³` : undefined],
       ['detail.yearDiscovered', this.formatYear(element.yearDiscovered)],
       ['detail.discoverer', element.discoverer],
-      ['detail.activeLayerValue', this.formatLayerValue(layer, scale, layerValue)],
+      ['detail.activeLayerValue', this.formatLayerValue(layer, scale, layerValue, element.atomicNumber)],
     ];
 
     return optionalRows
@@ -125,9 +125,19 @@ export class ElementDetail {
     return year < 0 ? `${Math.abs(year)} BCE` : String(year);
   }
 
-  private formatLayerValue(layer: Layer, scale: ColorScaleDef | undefined, value: unknown): string {
+  private formatLayerValue(
+    layer: Layer,
+    scale: ColorScaleDef | undefined,
+    value: unknown,
+    atomicNumber: number,
+  ): string {
     if (value === undefined || value === null) {
       return this.i18n.t('app.noLayerValue');
+    }
+
+    const displayValue = layer.displayValues?.[String(atomicNumber)];
+    if (displayValue) {
+      return displayValue;
     }
 
     if (layer.type === 'continuous' && typeof value === 'number') {

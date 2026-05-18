@@ -39,7 +39,17 @@ export interface Layer {
   colorScale: string;
   type: LayerType;
   unit?: string;
+  source?: string;
+  notes?: string[];
+  legendBins?: LayerLegendBin[];
+  displayValues?: Record<string, string>;
   values: Record<string, unknown>;
+}
+
+export interface LayerLegendBin {
+  label: string;
+  min?: number;
+  max?: number;
 }
 
 export interface ColorScale {

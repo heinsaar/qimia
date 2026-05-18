@@ -607,26 +607,34 @@ h1 {
 
 .detail-panel {
   grid-template-columns: minmax(52px, 0.28fr) minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   align-content: start;
-  gap: clamp(6px, 0.55vw, 10px);
+  column-gap: clamp(6px, 0.55vw, 10px);
+  row-gap: 5px;
 }
 
 .detail-heading {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  min-width: 0;
+  display: contents;
 }
 
 .detail-heading h2 {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  align-self: start;
+  max-width: 100%;
   margin: 0;
   overflow: hidden;
   font-size: clamp(0.78rem, 0.5rem + 0.58vw, 1.2rem);
   line-height: 1.05;
+  text-align: right;
   text-overflow: ellipsis;
 }
 
 .detail-number {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
   width: fit-content;
   padding: 3px 7px;
   border-radius: 999px;
@@ -637,12 +645,16 @@ h1 {
 }
 
 .detail-heading strong {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
   font-size: clamp(1.65rem, 0.86rem + 1.6vw, 2.9rem);
   line-height: 1;
 }
 
 .detail-story {
-  grid-column: 1 / -1;
+  grid-column: 2;
+  grid-row: 2;
   min-width: 0;
   margin: 0;
 }
@@ -662,6 +674,7 @@ h1 {
 .detail-list {
   display: grid;
   grid-column: 1 / -1;
+  grid-row: 3;
   gap: 0;
   align-self: start;
   min-width: 0;

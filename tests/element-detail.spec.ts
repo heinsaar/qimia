@@ -19,6 +19,25 @@ test('detail panel shows hydrogen by default inside the table gap', async ({ pag
   expect(detailBox!.x + detailBox!.width).toBeLessThan(gridBox!.x + gridBox!.width);
 });
 
+test('detail name sits in the top right of the detail panel', async ({ page }) => {
+  await openApp(page);
+  await elementCell(page, 14).click();
+
+  const detailBox = await page.locator('[data-testid="element-detail"]').boundingBox();
+  const nameBox = await page.locator('[data-testid="detail-name"]').boundingBox();
+  const symbolBox = await page.locator('[data-testid="detail-symbol"]').boundingBox();
+  const storyBox = await page.locator('.detail-story').boundingBox();
+
+  expect(detailBox).not.toBeNull();
+  expect(nameBox).not.toBeNull();
+  expect(symbolBox).not.toBeNull();
+  expect(storyBox).not.toBeNull();
+  expect(nameBox!.x).toBeGreaterThan(symbolBox!.x + symbolBox!.width);
+  expect(nameBox!.y - detailBox!.y).toBeLessThan(36);
+  expect(detailBox!.x + detailBox!.width - (nameBox!.x + nameBox!.width)).toBeLessThan(24);
+  expect(storyBox!.y).toBeLessThan(symbolBox!.y + symbolBox!.height);
+});
+
 test('clicking an element updates detail panel', async ({ page }) => {
   await openApp(page);
   await elementCell(page, 79).click();

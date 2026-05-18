@@ -83,9 +83,17 @@ test('generic layer context uses layer metadata in the table inset', async ({ pa
   await openApp(page);
   await page.click('[data-layer-id="crustal_abundance"]');
 
-  await expect(page.locator('[data-testid="layer-context-title"]')).toContainText('Crustal Abundance');
-  await expect(page.locator('[data-testid="layer-context"]')).toContainText('Noble gases form no part');
-  await expect(page.locator('[data-testid="layer-context"]')).toContainText('10-100%');
+  const context = page.locator('[data-testid="layer-context"]');
+  const title = page.locator('[data-testid="layer-context-title"]');
+  const contextBox = await context.boundingBox();
+  const titleBox = await title.boundingBox();
+
+  expect(contextBox).not.toBeNull();
+  expect(titleBox).not.toBeNull();
+  await expect(title).toContainText('Crustal Abundance');
+  await expect(context).toContainText('Noble gases form no part');
+  await expect(context).toContainText('10-100%');
+  expect(titleBox!.y - contextBox!.y).toBeLessThan(40);
 });
 
 test('periodic table scales to the available desktop workspace', async ({ page }) => {

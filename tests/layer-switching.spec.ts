@@ -83,5 +83,38 @@ test('periodic table scales to the available desktop workspace', async ({ page }
   });
 
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
-  expect(metrics.gridWidth / metrics.clientWidth).toBeGreaterThan(0.82);
+  expect(metrics.gridWidth / metrics.clientWidth).toBeGreaterThan(0.98);
+});
+
+test('periodic table keeps the same footprint across layers', async ({ page }) => {
+  await page.setViewportSize({ width: 2048, height: 1024 });
+  await openApp(page);
+
+  const layers = [
+    'battery',
+    'crustal_abundance',
+    'water_composition',
+    'electronegativity',
+    'atomic_radius',
+    'ionization_energy',
+  ];
+  const footprints: Array<{ x: number; width: number; height: number }> = [];
+
+  for (const layer of layers) {
+    await page.click(`[data-layer-id="${layer}"]`);
+    footprints.push(
+      await page.locator('.periodic-grid').evaluate((grid) => {
+        const rect = grid.getBoundingClientRect();
+        return {
+          x: Math.round(rect.x),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+        };
+      }),
+    );
+  }
+
+  expect(new Set(footprints.map((footprint) => footprint.x)).size).toBe(1);
+  expect(new Set(footprints.map((footprint) => footprint.width)).size).toBe(1);
+  expect(new Set(footprints.map((footprint) => footprint.height)).size).toBe(1);
 });

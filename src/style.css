@@ -212,16 +212,17 @@ h1 {
   display: grid;
   gap: 18px;
   align-content: start;
-  justify-items: center;
+  justify-items: stretch;
   padding: 24px;
   min-width: 0;
 }
 
 .table-scroll {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  justify-items: stretch;
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   overflow: visible;
 }
 
@@ -230,7 +231,9 @@ h1 {
   grid-template-columns: repeat(18, minmax(0, 1fr));
   grid-template-rows: repeat(9, minmax(0, 1fr));
   gap: clamp(2px, 0.24vw, var(--cell-gap));
-  width: min(100%, calc(var(--table-target-height) + var(--table-target-height)));
+  width: 100%;
+  justify-self: stretch;
+  min-width: 0;
   max-width: 100%;
   aspect-ratio: 2 / 1;
   align-items: stretch;
@@ -382,7 +385,7 @@ h1 {
 }
 
 .legend {
-  width: min(100%, calc(var(--table-target-height) + var(--table-target-height)));
+  width: 100%;
   max-width: 100%;
   padding: 16px;
   border: 1px solid var(--color-border);

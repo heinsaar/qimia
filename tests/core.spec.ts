@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import elementStories from '../data/elementStories.json';
 import elements from '../data/elements.json';
+import crustalLayer from '../data/layers/crustal_abundance.json';
 import { ColorScale } from '../src/ColorScale';
 import { LayerRegistry } from '../src/LayerRegistry';
 import type { ColorScale as ColorScaleDef, ElementStoryMap, Layer } from '../src/types';
@@ -47,6 +48,34 @@ test('ColorScale interpolates continuous values', () => {
   };
 
   expect(resolver.resolve(scale, 5)).toBe('rgb(128, 128, 128)');
+});
+
+test('ColorScale resolves zero continuous values to zero color', () => {
+  const resolver = new ColorScale();
+  const scale: ColorScaleDef = {
+    type: 'continuous',
+    scale: 'log10',
+    stops: [{ value: -8, color: '#000000' }],
+  };
+
+  expect(resolver.resolve(scale, 0)).toBe('var(--color-cell-zero)');
+});
+
+test('crustal abundance layer includes every pictured element value', () => {
+  const values = (crustalLayer as Layer).values as Record<string, number>;
+  const expectedKeys = elements.map((element) => String(element.atomicNumber));
+
+  expect(Object.keys(values).sort((left, right) => Number(left) - Number(right))).toEqual(expectedKeys);
+  expect(values['8']).toBe(46.1);
+  expect(values['14']).toBe(28.2);
+  expect(values['13']).toBe(8.23);
+  expect(values['34']).toBe(5e-8);
+  expect(values['69']).toBe(5.2e-7);
+  expect(values['79']).toBe(4e-9);
+  expect(values['90']).toBe(0.0001);
+  expect(values['2']).toBe(0);
+  expect(values['43']).toBe(0);
+  expect(values['118']).toBe(0);
 });
 
 test('all elements have localized detail stories', () => {

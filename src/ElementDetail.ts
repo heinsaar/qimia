@@ -50,8 +50,10 @@ export class ElementDetail {
     this.container.innerHTML = `
       <aside class="detail-panel is-open" data-testid="element-detail" aria-label="${this.i18n.t('app.elementDetail')}">
         <div class="detail-heading">
-          <span class="detail-number">${element.atomicNumber}</span>
-          <h2 data-testid="detail-name">${name}</h2>
+          <div class="detail-title-row">
+            <h2 data-testid="detail-name">${name}</h2>
+            <span class="detail-number">${element.atomicNumber}</span>
+          </div>
           <strong data-testid="detail-symbol">${element.symbol}</strong>
         </div>
         <section class="detail-story">

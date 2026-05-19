@@ -453,7 +453,7 @@ h1 {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows: minmax(0, 1fr);
-  gap: clamp(8px, 0.72vw, 14px);
+  gap: clamp(2px, 0.24vw, var(--cell-gap));
   align-self: stretch;
   height: 100%;
   min-height: 0;

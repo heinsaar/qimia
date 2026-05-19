@@ -84,17 +84,24 @@ test('generic layer context uses layer metadata in the table inset', async ({ pa
   await page.click('[data-layer-id="crustal_abundance"]');
 
   const context = page.locator('[data-testid="layer-context"]');
+  const detail = page.locator('[data-testid="element-detail"]');
   const title = page.locator('[data-testid="layer-context-title"]');
   const contextBox = await context.boundingBox();
+  const detailBox = await detail.boundingBox();
   const titleBox = await title.boundingBox();
   const insetBox = await page.locator('#table-inset').boundingBox();
+  const gridColumnGap = await page.locator('.periodic-grid').evaluate((grid) => {
+    return Number.parseFloat(getComputedStyle(grid).columnGap);
+  });
 
   expect(contextBox).not.toBeNull();
+  expect(detailBox).not.toBeNull();
   expect(titleBox).not.toBeNull();
   expect(insetBox).not.toBeNull();
   await expect(title).toContainText('Crustal Abundance');
   await expect(context).toContainText('Noble gases form no part');
   await expect(context).toContainText('10-100%');
+  expect(detailBox!.x - (contextBox!.x + contextBox!.width)).toBeCloseTo(gridColumnGap, 0);
   expect(titleBox!.y - contextBox!.y).toBeLessThan(40);
   expect(contextBox!.y + contextBox!.height).toBeLessThanOrEqual(insetBox!.y + insetBox!.height + 1);
 });
